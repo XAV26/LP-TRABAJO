@@ -1,0 +1,139 @@
+# Definicion de variables
+SaldoCuenta = 0
+
+LineaCredito = 1000
+ConsumoCredito = 0
+
+
+# Función - Menú: Muestra el menú principal
+
+def Menu():
+    print("----------------")
+    print(" MENU PRINCIPAL")
+    print("----------------")
+    print("a) Retiros")
+    print("b) Depósitos")
+    print("c) Consultas")
+    print("d) Salir")
+
+
+# Función - Retiros: Realizar las operaciones de retiros
+
+def Retiros():
+
+    global SaldoCuenta
+    global LineaCredito
+    global ConsumoCredito
+    
+    print("------------------")
+    print(" OPCIÓN - RETIROS")
+    print("------------------")
+    MenuTarjetas()
+    TipoTarjeta = input("Seleccione tipo de tarjeta: ")
+    MontoRetiro = int(input("Ingrese Monto a Retirar: "))
+
+    if (TipoTarjeta == "d"):
+        if (MontoRetiro <= SaldoCuenta):
+            SaldoCuenta = SaldoCuenta - MontoRetiro
+            print("El RETIRO se realizó exitosamente...")
+        else:
+            print("ERROR: Su Cuenta de Ahorro no tiene saldo suficiente para realizar el retiro...")
+            
+    if (TipoTarjeta == "c"):
+        print("Linea de Crédito: ", LineaCredito)
+
+        MontoRetiroComisionTarjeta = MontoRetiro + MontoRetiro * 0.05
+
+        if (MontoRetiroComisionTarjeta <= LineaCredito - ConsumoCredito):
+
+            # Verificar si el monto a retirar es menor al 50% de la línea de credito
+            if (MontoRetiroComisionTarjeta < LineaCredito * 0.50):
+                ConsumoCredito = ConsumoCredito + MontoRetiroComisionTarjeta
+                print("El RETIRO se realizó exitosamente...")
+            else:
+                print("ERROR: El Monto a retirar es igual o mayor al 50% de la línea de crédito...")
+        else:
+            print("ERROR: No posee saldo en su Línea de Crédito para realizar el Retiro...")
+            
+
+def MenuTarjetas():
+    print("------------------------")
+    print(" MENÚ - TIPO DE TARJETA")
+    print("------------------------")
+    print("d) Tarjeta de Débito")
+    print("c) Tarjeta de Crédito")    
+
+
+# Función - Depósitos: Realizar las operaciones de depósitos
+
+def Depositos():
+
+    global SaldoCuenta
+    global ConsumoCredito
+    
+    print("------------------")
+    print(" OPCIÓN - DEPÓSITOS")
+    print("------------------")
+    MenuDestinoDeposito()
+    DestinoDeposito = input("Seleccione Destino del Depósito: ")
+    MontoDeposito = int(input("Ingrese Monto a Depositar: "))
+
+    if (DestinoDeposito == "e"):
+        SaldoCuenta = SaldoCuenta + MontoDeposito
+        
+    if (DestinoDeposito == "f"):
+        ConsumoCredito = ConsumoCredito - MontoDeposito
+            
+def MenuDestinoDeposito():
+    print("------------------------")
+    print(" MENÚ - DESTINO DEPOSITO")
+    print("------------------------")
+    print("e) Saldo Cuenta de Ahorros")
+    print("f) Pagar Adeudo Tarjeta de Crédito")       
+
+
+# Función - Consultas: Realizar las operaciones de consultas
+
+def Consultas():
+
+    global SaldoCuenta
+    global LineaCredito
+    global ConsumoCredito
+    
+    print("------------------")
+    print(" OPCIÓN - CONSULTAS")
+    print("------------------")
+    print("Saldo en la Cuenta Ahorro: ", SaldoCuenta)
+    print("Línea de Crédito: ", LineaCredito)
+    print("Consumo de Crédito: ", ConsumoCredito)
+    print("Saldo de Crédito: ", LineaCredito - ConsumoCredito)
+         
+
+# Función - Principal: Programa principal
+
+
+# Mostrar el menú principal
+Menu()
+
+# Leer la opción seleccionada
+Opcion = input("Ingrese opción: ")
+
+while (Opcion != "d"):
+
+    # Realizar la operación según la opción seleccionada
+    if (Opcion == "a"): # Realizar la operacion de retiros
+        Retiros()
+        
+    if (Opcion == "b"): # Realizar la operacion de depósitos
+        Depositos()
+        
+    if (Opcion == "c"): # Realizar la operacion de consultas
+        Consultas()
+        
+    # Mostrar el menú principal
+    Menu()
+
+    # Leer la opción seleccionada
+    Opcion = input("Ingrese opción: ")
+
+print("Gracias por utilizar nuestro programa...")
