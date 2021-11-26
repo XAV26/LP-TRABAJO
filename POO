@@ -1,0 +1,250 @@
+package cajeroautomatico;
+
+import java.util.Scanner;
+
+
+// clase CuentaAhorro: Permite hacer todos los movimientos en la cuenta de ahorros
+
+class CuentaAhorro
+{
+    private double Saldo;
+    
+    public CuentaAhorro(double pSaldo)
+    {
+        this.Saldo = pSaldo;
+    }
+    
+    
+    public double getSaldo()
+    {
+        return Saldo;
+    }
+    
+    public void setSaldo(double pSaldo)
+    {
+        this.Saldo = pSaldo;
+    }
+    
+    public void MostrarCuenta()
+    {
+        System.out.println("---------------------");
+        System.out.println(" CUENTA DE AHORROS");
+        System.out.println("Saldo en la Cuenta de Ahorro: " + getSaldo());
+    }
+    
+    public void Depositar(double pMontoDeposito)
+    {
+        this.Saldo = this.Saldo + pMontoDeposito;
+    }
+    
+    public void Retirar(double pMontoRetiro)
+    {
+        if (pMontoRetiro <= this.Saldo)
+        {
+            this.Saldo = this.Saldo - pMontoRetiro;
+            System.out.println("El retiro se realizo correctamente");
+        }
+        else
+            System.out.println("ERROR: Su cuenta de ahorros no tiene saldo suficiente para realizar el retiro");
+    }
+}
+
+
+// clase CuentaCredito: Permite hacer todos los movimientos en la cuenta de crédito
+
+class CuentaCredito 
+{
+    private double LimiteCredito;
+    private double ConsumoCredito;
+    
+    public CuentaCredito(double pLimiteCredito)
+    {
+        this.LimiteCredito = pLimiteCredito;
+        this.ConsumoCredito = 0;
+    }
+    
+    public double getLimiteCredito()
+    {
+        return LimiteCredito;
+    }
+    public void setLimiteCredito(double pLimiteCredito)
+    {
+        this.LimiteCredito = pLimiteCredito;
+    }
+    public double getConsumoCredito()
+    {
+        return this.ConsumoCredito;
+    }
+    public void setConsumoCredito(double pConsumoCredito)
+    {
+        this.ConsumoCredito = pConsumoCredito;
+    }
+    public void MostrarCuenta()
+    {
+        System.out.println("-------------------");
+        System.out.println(" CUENTA DE CREDITOS");
+        System.out.println("Línea de Crédito: " + getLimiteCredito());
+        System.out.println("Consumo de Crédito: " + getConsumoCredito());
+        System.out.println("Saldo de Crédito: " + (getLimiteCredito() - getConsumoCredito()));
+    }
+    
+    public void Depositar(double pMontoDeposito)
+    {
+        this.ConsumoCredito = this.ConsumoCredito - pMontoDeposito;
+    }
+    
+    public void Retirar(double pMontoRetiro)
+    {
+        double MontoRetiroComisionTarjeta;
+        
+        MontoRetiroComisionTarjeta = pMontoRetiro + pMontoRetiro * 0.05;
+        
+        if (MontoRetiroComisionTarjeta <= this.LimiteCredito - this.ConsumoCredito)
+        {
+            // Verifica si el monto a retirar no excede el 50% de la línea de credito
+            if (MontoRetiroComisionTarjeta < this.LimiteCredito *0.50)
+            {
+                this.ConsumoCredito = this.ConsumoCredito + MontoRetiroComisionTarjeta;
+                System.out.println("El retiro se realizó correctamente");
+            }
+            else
+            {
+                System.out.println("ERROR: El monto a retirar excede el 50% de la línea de crédito");
+            }
+        }
+        else
+        {
+            System.out.println("ERROR: No posee saldo en su línea de crédito para realizar el retiro");
+        }
+    }   
+}
+
+
+// clase principal de nuestro programa
+
+public class CajeroAutomatico 
+{
+    static void Menu()
+    {
+        System.out.println("----------------");
+        System.out.println(" MENU PRINCIPAL");
+        System.out.println("a) Retiros");
+        System.out.println("b) Depositos");
+        System.out.println("c) Consultas");
+        System.out.println("d) Salir");
+    }
+    
+    static void MenuDestinoDeposito()
+    {
+        System.out.println("-----------------------");
+        System.out.println(" MENU DESTINO DEPOSITO");
+        System.out.println("e) Saldo Cuenta de Ahorros");
+        System.out.println("f) Pagar Adeudo Tarjeta de Credito");
+    }
+    
+    static void MenuTarjetas()
+    {
+        System.out.println("-----------------------");
+        System.out.println(" MENU TIPO DE TARJETA");
+        System.out.println("d) Tarjeta de Débito");
+        System.out.println("c) Tarjeta de Crédito");
+    }
+    
+    
+    // clase main: función principal de nuestro programa
+    
+    public static void main(String[] args) 
+    {
+        // declara variable para captura desde el teclado
+        Scanner Teclado = new Scanner(System.in);
+        
+        // declara los objetos
+        CuentaAhorro CuentaAhorro1 = new CuentaAhorro(0);
+        CuentaCredito CuentaCredito1 = new CuentaCredito(1000);
+        
+        // declara variables del programa principal
+        String Opcion;
+        String DestinoDeposito;
+        String TipoTarjeta;
+        
+        double MontoDeposito;
+        double MontoRetiro;
+        
+        // Muestra el menu principal
+        Menu();
+        
+        // Lee la opción seleccionada
+        System.out.print("Ingrese Opcion: ");
+        Opcion = Teclado.next();
+        
+        while (Opcion.compareTo("d") != 0)
+        {
+            // Realiza la operacion de retiros
+            if (Opcion.compareTo("a") == 0)
+            {
+                MenuTarjetas();
+                
+                // Lee la opción seleccionada
+                System.out.print("Ingrese Opcion: ");
+                TipoTarjeta = Teclado.next();
+                
+                // Lee el monto a retirar
+                System.out.print("Ingrese monto a retirar: ");
+                MontoRetiro = Teclado.nextDouble();
+                
+                if (TipoTarjeta.compareTo("d") == 0)
+                {
+                    CuentaAhorro1.Retirar(MontoRetiro);
+                }
+                
+                if (TipoTarjeta.compareTo("c") == 0)
+                {
+                    CuentaCredito1.Retirar(MontoRetiro);
+                }
+                
+            }
+            
+            // Realiza la operacion de depósitos
+            if (Opcion.compareTo("b") == 0)
+            {
+                MenuDestinoDeposito();
+                
+                // Lee la opción seleccionada
+                System.out.print("Ingrese Opcion: ");
+                DestinoDeposito = Teclado.next();
+                
+                // Lee el monto a depositar
+                System.out.print("Ingrese monto a depositar: ");
+                MontoDeposito = Teclado.nextDouble();
+                                
+                if (DestinoDeposito.compareTo("e") == 0)
+                {
+                    CuentaAhorro1.Depositar(MontoDeposito);
+                }
+                
+                if (DestinoDeposito.compareTo("f") == 0)
+                {
+                    CuentaCredito1.Depositar(MontoDeposito);
+                }
+                
+            }
+            
+            // Realiza la operacion de consultas
+            if (Opcion.compareTo("c") == 0)
+            {
+                CuentaAhorro1.MostrarCuenta();
+                CuentaCredito1.MostrarCuenta();
+            }
+            
+            // Muestra el menú principal
+            Menu();
+
+            // Lee la opción seleccionada
+            System.out.print("Ingrese Opción: ");
+            Opcion = Teclado.next();
+            
+        }
+        
+        System.out.println("Gracias por utilizar nuestro programa");
+    }
+}
